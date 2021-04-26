@@ -13,19 +13,25 @@
         <h1>Bus Mall</h1>
     </header>
     <main>
-        <aside id="showResult">
-            <button id="btnResult">View Results</button>
-        </aside>
+        
         <section class="img-section" id="imgSection">
             <img src="" alt="" id="leftImage">
             <img src="" alt="" id="centerImage">
             <img src="" alt="" id="rightImage">
         </section>
-        <section class="p-section">
-           
+        <section class="left-side">
+            
+            <section id="showResult">
+                <button id="btnResult">View Results</button>
+            </section>
+            <section class="js-chart">
+                <canvas id="myChart" width="400" height="400"></canvas>
+            </section>
         </section>
+        
     </main>
     <footer></footer>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.0/dist/chart.min.js"></script>
     <script src="./js/app.js"></script>
 </body>
 </html>
