@@ -18,18 +18,22 @@ header h1 {
     
 }
 main {
-    display: grid;
-    grid-template-columns: 250px 1fr;
+   display: flex;
+   flex-direction: column;
+}
+.left-side {
+    display: flex;
 }
 button {
     width: 80px;
     height: 50px;
 }
-main aside {
+/* main aside {
     display: grid;
     grid-template-rows: 20px ifr;
-    /* margin: 20px; */
-}
+    margin: 20px;
+} */
+
 
 main aside ul li{
     margin: 10px;
@@ -48,7 +52,8 @@ img {
 
 }
 
-.p-section{
-    display: grid;
-    grid-template-rows: 1fr;
+.js-chart {
+    width: 80%;
+    float: right;
+    padding: 10px;
 }
