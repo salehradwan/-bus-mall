@@ -61,8 +61,10 @@ function Item (name){
   Item.allImage.push(this);
   this.shown = 0;
   this.clicks = 0;
+
 }
 Item.allImage = [];
+Item.prevIndex = [];
 
 // To create a new obj
 for (let i = 0; i < itemArr.length; i++) {
@@ -71,6 +73,14 @@ for (let i = 0; i < itemArr.length; i++) {
 
 // To render the Item
 function renderItem (){
+  Item.prevIndex = [];
+  if (clickNumber > 0) {
+    Item.prevIndex.push(leftItemIndex);
+    Item.prevIndex.push(centerItemIndex);
+    Item.prevIndex.push(rightItemIndex);
+  }
+
+
   let rightIndex ;
   let centerIndex;
   let leftIndex = randomItem(0, itemArr.length - 1);
@@ -97,23 +107,11 @@ function renderItem (){
   Item.allImage[leftIndex].shown++;
 
 }
-// function genRandomNum() {
-//   randoOne = Math.floor(Math.random() * 20);
-//   while (randoOne === prevRandoOne || randoOne === prevRandoTwo || randoOne === prevRandoThree) {
-//     randoOne = Math.floor(Math.random() * 20);
-//   }
-//   prevRandoOne = randoOne;
-//   randoTwo = Math.floor(Math.random() * 20);
-//   while (randoTwo === prevRandoOne || randoTwo === prevRandoTwo || randoTwo === prevRandoThree || randoTwo === randoOne) {
-//     randoTwo = Math.floor(Math.random() * 20);
-//   }
-//   prevRandoTwo = randoTwo;
-//   randoThree = Math.floor(Math.random() * 20);
-//   while (randoThree === prevRandoOne || randoThree === prevRandoTwo || randoThree === prevRandoThree || randoThree === randoOne || randoThree === randoTwo){
-//     randoThree = Math.floor(Math.random() * 20);
-//   }
-//   prevRandoThree = randoThree;
-// }
+function setData(){
+  localStorage.setItem('Item', JSON.stringify(Item.allImage));
+}
+
+
 function sectionClick(e){
   if ((e.target.id === 'rightImage' || e.target.id === 'centerImage' || e.target.id === 'leftImage') && clickNumber < attemp ){
     if (e.target.id === 'rightImage') {
@@ -127,21 +125,28 @@ function sectionClick(e){
     }
     renderItem();
     clickNumber++;
+    setData();
     console.log(clickNumber);
   } else {
     console.log(renderChart());
   }
 }
+
 function resultClick(e){
   e.preventDefault();
-  for (let i = 0; i < Item.allImage.length; i++) {
-    let liElement = document.createElement('li');
-    ulElement.appendChild(liElement);
-    liElement.textContent = `${Item.allImage[i].name} had ${Item.allImage[i].clicks} votes, and was seen ${Item.allImage[i].shown} times.`;
+  let data = JSON.parse(localStorage.getItem('Item'));
 
+  if (data){
+    for (let i = 0; i < Item.allImage.length; i++) {
+      let liElement = document.createElement('li');
+      ulElement.appendChild(liElement);
+
+      liElement.textContent = `${data[i].name} had ${data[i].clicks} votes, and was seen ${data[i].shown} times.`;
+    }
   }
   btnResult.removeEventListener('click', resultClick);
 }
+
 
 itemSection.addEventListener('click', sectionClick);
 btnResult.addEventListener('click', resultClick);
@@ -213,22 +218,59 @@ function renderChart(){
     }
   });
 }
-// function noRepet (r){
-//   // let nums = [],
-//   let ranNums = [],
-//     i = r.length,
-//     j = 0;
 
-//   while (i--) {
-//     j = Math.floor(Math.random() * (i+1));
-//     ranNums.push(nums[j]);
-//     nums.splice(j,1);
-//   }
+// let data = JSON.parse(localStorage.getItem('Item'));
+// let picName;
+// let clickssss = 0;
+// let shownn = 0;
+// for (let i = 0; i < data.length; i++) {
+//   picName = data[i].name;
+//   clickssss = data[i].clicks;
+//   shownn = data[i].shown;
+//   console.log(picName, ' dd '+ clickssss + ' ' + shownn );
+
 // }
-// console.log(noRepet());
+// console.log();
+
+// function getData() {
+//   let data = JSON.parse(localStorage.getItem('Item'));
+//   let picName;
+//   let clickssss = 0;
+//   let shownn = 0;
+//   let msg;
+//   if (data) {
+//     for (let i = 0; i < data.length; i++) {
+//       // new Item (data[i].name, data[i].clicks, data[i].shown);
+//       picName = data[i].name;
+//       clickssss = data[i].clicks;
+//       shownn = data[i].shown;
+//     }
+//     msg = `${picName} had ${clickssss} votes, and was seen ${shownn} times.`;
+//     // renderItem();
+//   }
+//   return msg;
+// }
+
+// console.log(getData());
+
+// console.log(data);
 // to get the random number
 function randomItem(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+
+  let rand;
+  let allowed;
+
+  do {
+    rand = Math.floor(Math.random() * (max - min) + min);
+    allowed = true;
+
+    for (let i = 0; i < Item.prevIndex.length; i++) {
+      if (Item.prevIndex[i] === rand){
+        allowed = false;
+      }
+    }
+  }while(!allowed);
+  return rand;
 }
